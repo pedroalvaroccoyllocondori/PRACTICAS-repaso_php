@@ -1,34 +1,59 @@
 <?php
 
-///json encode y decode
-//json encode array en un JSON
+$directorio= "animales";
+$archivos =scandir($directorio);
 
-$array_asociativo = [
-"nombre"=>"sususki",
-"color"=>"blanco",
-"edad"=>2021
-];
+impresion_array($archivos);
 
 
-$array_asociativo=["pedro","lizetted"];
+function impresion_array($array){
+    echo '<pre>';
+    print_r($array);
+    echo '</pre>';
+}
 
-///JSON ENCODE
+$archivos =array_diff($archivos,array('..','.'));
 
-$archivo_json = json_encode($array_asociativo,JSON_FORCE_OBJECT | JSON_PRETTY_PRINT);
+// impresion_array($archivos);
 
-file_put_contents('data_array simple.json',$archivo_json);
+$archivos=array_values($archivos);
 
-//JSON DECODE
+// impresion_array($archivos);
 
-$json_contenido= file_get_contents('data.json');
+$animales=array();
 
-$json_decode=json_decode($json_contenido,JSON_OBJECT_AS_ARRAY);
+for ($i=0; $i <count($archivos) ; $i++) { 
+   preg_match("!(.*?)\((.*?)\)!",$archivos[$i],$resultado);
 
-// print_r($json_decode);
 
-echo $json_decode['nombre'];
+   $nombre_animal=$resultado[1];
+   $nombre_animal=ucwords($nombre_animal);
 
-// echo gettype($bar);
+    $animales[$nombre_animal]['nombre_imagen']=$archivos[$i];
+    $animales[$nombre_animal]['tipo']=$resultado[2];
+
+
+}
+
+impresion_array($animales);
+
+echo "<table>";
+echo "<tr>";
+
+foreach ($animales as $key => $value) {
+    $contenido="<td><span>$key</span></br><img width='100' height='100' src='animales/$value[nombre_imagen]'></img></br><span>$value[tipo]</span></td>";
+
+    echo $contenido;
+}
+
+
+echo "</tr>";
+echo "</table>";
+
+
+
+
+
 
 ?>
 
